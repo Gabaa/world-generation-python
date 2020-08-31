@@ -6,4 +6,6 @@
   - [X] Finish the terrain generation strategy
   - [X] Remove mutators from Terrain
 - [ ] Set initial triangle randomly
+  - [ ] Finish CircleBasedTriangleStrategy (needs to set relative to center, and scale appropriately)
+  - [ ] Find a way to tell that strategy that window was resized (without window having to know the strategy)
 - [X] Add a new generation strategy (only longest edge is broken up)

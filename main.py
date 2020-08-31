@@ -3,14 +3,15 @@ from pyglet.window import key
 
 from util.pyglethelper import draw_polygon
 from worldgen import (BetweenEachPointStrategy, DistanceBasedOffsetStrategy,
-                      LongestEdgeSplitStrategy, Terrain, NSplitsStrategy)
+                      LongestEdgeSplitStrategy, NSplitsStrategy, PresetTriangleStrategy, Terrain)
 
 
 class Window(pyglet.window.Window):
-    def __init__(self, terrain, terrain_gen_strategy):
+    def __init__(self, terrain_gen_strategy, initial_terrain_strategy):
         super().__init__(width=500, height=500, resizable=True)
-        self.terrain = terrain
+        self.terrain = initial_terrain_strategy.generate_initial_terrain()
         self.terrain_gen_strategy = terrain_gen_strategy
+        self.initial_terrain_strategy = initial_terrain_strategy
 
     def on_draw(self):
         self.clear()
@@ -22,7 +23,7 @@ class Window(pyglet.window.Window):
         elif symbol == key.SPACE:
             self.terrain_gen_strategy.generate_points(self.terrain)
         elif symbol == key.R:
-            self.terrain = create_terrain(3)
+            self.terrain = self.initial_terrain_strategy.generate_initial_terrain()
 
     def on_mouse_press(self, x, y, button, mod):
         print(f"Mouse pos: {x}, {y}")
@@ -31,26 +32,13 @@ class Window(pyglet.window.Window):
         pyglet.app.run()
 
 
-def create_terrain(number_of_points):
-    """
-    Creates a new Terrain with random initial points.
-    """
-
-    if (3 > number_of_points):
-        raise ValueError("Too low number of points, must have at least 3.")
-
-    points = []
-    points.append((100, 398))
-    points.append((416, 250))
-    points.append((234, 133))
-
-    return Terrain(points)
-
-
 def main():
-    terrain = create_terrain(3)
-    terrain_gen_strategy = LongestEdgeSplitStrategy(DistanceBasedOffsetStrategy())
-    window = Window(terrain, NSplitsStrategy(terrain_gen_strategy, 50))
+    terrain_gen_strategy = NSplitsStrategy(
+        LongestEdgeSplitStrategy(DistanceBasedOffsetStrategy()), 100)
+
+    init_strategy = PresetTriangleStrategy()
+
+    window = Window(terrain_gen_strategy, init_strategy)
     window.run()
 
 
