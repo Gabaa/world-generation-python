@@ -9,6 +9,13 @@ class TerrainGenerationStrategy:
 
         pass
 
+    def on_reset(self):
+        """
+        Called when the terrain is reset
+        """
+
+        pass
+
 
 class BetweenEachPointStrategy(TerrainGenerationStrategy):
     def __init__(self, point_gen_strategy):
@@ -59,3 +66,22 @@ class NSplitsStrategy(TerrainGenerationStrategy):
     def generate_points(self, terrain):
         for _ in range(self.n):
             self.terrain_gen_strategy.generate_points(terrain)
+
+    def on_reset(self):
+        self.terrain_gen_strategy.on_reset()
+
+
+class ExponentialSplitsStrategy(TerrainGenerationStrategy):
+    def __init__(self, terrain_gen_strategy, n):
+        self.terrain_gen_strategy = terrain_gen_strategy
+        self.initial_n = n
+        self.n = n
+
+    def generate_points(self, terrain):
+        for _ in range(self.n):
+            self.terrain_gen_strategy.generate_points(terrain)
+        self.n *= 2
+
+    def on_reset(self):
+        self.n = self.initial_n
+        self.terrain_gen_strategy.on_reset()
