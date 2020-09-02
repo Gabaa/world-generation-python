@@ -1,4 +1,4 @@
-# World Generation Prototype
+# World Generation Tool
 
 A small tool for randomly generating landmasses, from islands to continents.
 
