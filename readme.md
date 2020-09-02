@@ -14,4 +14,4 @@ This is merely meant to be an inspiration for parts of a fictional map, not a dr
   - [X] Finish CircleBasedTriangleStrategy (needs to set relative to center, and scale appropriately)
   - [X] Find a way to tell that strategy that window was resized (without window having to know the strategy)
 - [X] Add an exponential version of NSplits
-- [ ] Helpful labels for non-me users
+- [X] Helpful labels for non-me users

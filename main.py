@@ -2,21 +2,28 @@ import pyglet
 from pyglet.window import key
 
 from util.pyglethelper import draw_polygon
-from worldgen import (BetweenEachPointStrategy, CircleBasedTriangleStrategy,
-                      DistanceBasedOffsetStrategy, ExponentialSplitsStrategy,
-                      LongestEdgeSplitStrategy, NSplitsStrategy, PresetTriangleStrategy, Terrain)
+from worldgen import (CircleBasedTriangleStrategy, DistanceBasedOffsetStrategy,
+                      ExponentialSplitsStrategy, LongestEdgeSplitStrategy, Terrain)
 
 
 class Window(pyglet.window.Window):
     def __init__(self, terrain_gen_strategy, initial_terrain_strategy):
-        super().__init__(width=500, height=500, resizable=True)
+        super().__init__(width=500, height=500, caption="World Generation Tool", resizable=True)
         self.terrain = initial_terrain_strategy.generate_initial_terrain(self.width, self.height)
         self.terrain_gen_strategy = terrain_gen_strategy
         self.initial_terrain_strategy = initial_terrain_strategy
+        self.helper_labels = [
+            pyglet.text.Label('[R]: Reset the current terrain', x=10, y=50),
+            pyglet.text.Label('[Space]: Randomly mutate the terrain', x=10, y=30),
+            pyglet.text.Label('[Esc]: Exit the program', x=10, y=10)
+        ]
 
     def on_draw(self):
         self.clear()
         draw_polygon(*self.terrain.points)
+
+        for label in self.helper_labels:
+            label.draw()
 
     def on_key_press(self, symbol, mod):
         if symbol == key.ESCAPE:
