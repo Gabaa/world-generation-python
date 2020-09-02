@@ -1,5 +1,9 @@
 # World Generation Prototype
 
+A small tool for randomly generating landmasses, from islands to continents.
+
+This is merely meant to be an inspiration for parts of a fictional map, not a drop-in replacement.
+
 ## TODO
 
 - [X] Refactor Terrain to be more consistent
@@ -10,3 +14,4 @@
   - [X] Finish CircleBasedTriangleStrategy (needs to set relative to center, and scale appropriately)
   - [X] Find a way to tell that strategy that window was resized (without window having to know the strategy)
 - [X] Add an exponential version of NSplits
+- [ ] Helpful labels for non-me users
