@@ -3,13 +3,13 @@ from pyglet.window import key
 
 from util.pyglethelper import draw_polygon
 from worldgen import (BetweenEachPointStrategy, DistanceBasedOffsetStrategy,
-                      LongestEdgeSplitStrategy, NSplitsStrategy, PresetTriangleStrategy, Terrain)
+                      LongestEdgeSplitStrategy, NSplitsStrategy, PresetTriangleStrategy, Terrain, CircleBasedTriangleStrategy)
 
 
 class Window(pyglet.window.Window):
     def __init__(self, terrain_gen_strategy, initial_terrain_strategy):
         super().__init__(width=500, height=500, resizable=True)
-        self.terrain = initial_terrain_strategy.generate_initial_terrain()
+        self.terrain = initial_terrain_strategy.generate_initial_terrain(self.width, self.height)
         self.terrain_gen_strategy = terrain_gen_strategy
         self.initial_terrain_strategy = initial_terrain_strategy
 
@@ -23,7 +23,7 @@ class Window(pyglet.window.Window):
         elif symbol == key.SPACE:
             self.terrain_gen_strategy.generate_points(self.terrain)
         elif symbol == key.R:
-            self.terrain = self.initial_terrain_strategy.generate_initial_terrain()
+            self.terrain = self.initial_terrain_strategy.generate_initial_terrain(self.width, self.height)
 
     def on_mouse_press(self, x, y, button, mod):
         print(f"Mouse pos: {x}, {y}")
@@ -36,7 +36,7 @@ def main():
     terrain_gen_strategy = NSplitsStrategy(
         LongestEdgeSplitStrategy(DistanceBasedOffsetStrategy()), 100)
 
-    init_strategy = PresetTriangleStrategy()
+    init_strategy = CircleBasedTriangleStrategy()
 
     window = Window(terrain_gen_strategy, init_strategy)
     window.run()
