@@ -1,16 +1,20 @@
-from util.camera import Camera
 import pyglet
 from pyglet.window import key, mouse
 
+from util.camera import CenteredCamera
 from util.pyglethelper import draw_polygon
 from worldgen import (CircleBasedTriangleStrategy, DistanceBasedOffsetStrategy,
-                      ExponentialSplitsStrategy, LongestEdgeSplitStrategy, Terrain)
+                      ExponentialSplitsStrategy, LongestEdgeSplitStrategy)
+
+WINDOW_WIDTH = 500
+WINDOW_HEIGHT = 500
 
 
 class Window(pyglet.window.Window):
     def __init__(self, terrain_gen_strategy, initial_terrain_strategy):
-        super().__init__(width=500, height=500, caption="World Generation Tool", resizable=True)
-        self.camera = Camera()
+        super().__init__(width=WINDOW_WIDTH, height=WINDOW_HEIGHT, caption="World Generation Tool", resizable=True)
+        self.camera = CenteredCamera(self)
+        self.reset_camera()
         self.terrain = initial_terrain_strategy.generate_initial_terrain(self.width, self.height)
         self.terrain_gen_strategy = terrain_gen_strategy
         self.initial_terrain_strategy = initial_terrain_strategy
@@ -19,6 +23,9 @@ class Window(pyglet.window.Window):
             pyglet.text.Label('[Space]: Randomly mutate the terrain', x=10, y=30),
             pyglet.text.Label('[Esc]: Exit the program', x=10, y=10)
         ]
+
+    def reset_camera(self):
+        self.camera.position = self.width // 2, self.height // 2
 
     def on_draw(self):
         self.clear()
@@ -38,11 +45,11 @@ class Window(pyglet.window.Window):
             self.terrain = self.initial_terrain_strategy.generate_initial_terrain(
                 self.width, self.height)
             self.terrain_gen_strategy.on_reset()
-            self.camera.position = 0, 0
+            self.reset_camera()
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if buttons & mouse.LEFT:
-            self.camera.move(-dx, -dy)
+            self.camera.move(-dx / self.camera.zoom, -dy / self.camera.zoom)
 
     def on_mouse_scroll(self, x, y, scroll_x, scroll_y):
         self.camera.zoom += scroll_y
