@@ -4,3 +4,7 @@ venv
 .venv
 
 .vscode
+
+build
+dist
+*.spec
