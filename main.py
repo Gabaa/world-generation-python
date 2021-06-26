@@ -1,5 +1,6 @@
+from util.camera import Camera
 import pyglet
-from pyglet.window import key
+from pyglet.window import key, mouse
 
 from util.pyglethelper import draw_polygon
 from worldgen import (CircleBasedTriangleStrategy, DistanceBasedOffsetStrategy,
@@ -9,6 +10,7 @@ from worldgen import (CircleBasedTriangleStrategy, DistanceBasedOffsetStrategy,
 class Window(pyglet.window.Window):
     def __init__(self, terrain_gen_strategy, initial_terrain_strategy):
         super().__init__(width=500, height=500, caption="World Generation Tool", resizable=True)
+        self.camera = Camera()
         self.terrain = initial_terrain_strategy.generate_initial_terrain(self.width, self.height)
         self.terrain_gen_strategy = terrain_gen_strategy
         self.initial_terrain_strategy = initial_terrain_strategy
@@ -20,7 +22,9 @@ class Window(pyglet.window.Window):
 
     def on_draw(self):
         self.clear()
-        draw_polygon(*self.terrain.points)
+
+        with self.camera:
+            draw_polygon(*self.terrain.points)
 
         for label in self.helper_labels:
             label.draw()
@@ -34,9 +38,14 @@ class Window(pyglet.window.Window):
             self.terrain = self.initial_terrain_strategy.generate_initial_terrain(
                 self.width, self.height)
             self.terrain_gen_strategy.on_reset()
+            self.camera.position = 0, 0
 
-    def on_mouse_press(self, x, y, button, mod):
-        print(f"Mouse pos: {x}, {y}")
+    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
+        if buttons & mouse.LEFT:
+            self.camera.move(-dx, -dy)
+
+    def on_mouse_scroll(self, x, y, scroll_x, scroll_y):
+        self.camera.zoom += scroll_y
 
     def run(self):
         pyglet.app.run()
