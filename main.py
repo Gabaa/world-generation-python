@@ -13,11 +13,21 @@ WINDOW_HEIGHT = 500
 class Window(pyglet.window.Window):
     def __init__(self, terrain_gen_strategy, initial_terrain_strategy):
         super().__init__(width=WINDOW_WIDTH, height=WINDOW_HEIGHT, caption="World Generation Tool", resizable=True)
+
+        # Load and set window icon
+        icon = pyglet.resource.image("icon.png")
+        self.set_icon(icon)
+
+        # Create camera
         self.camera = CenteredCamera(self)
         self.reset_camera()
+
+        # Create terrain
         self.terrain = initial_terrain_strategy.generate_initial_terrain(self.width, self.height)
         self.terrain_gen_strategy = terrain_gen_strategy
         self.initial_terrain_strategy = initial_terrain_strategy
+
+        # Create helper labels
         self.helper_labels = [
             pyglet.text.Label('[R]: Reset the current terrain', x=10, y=50),
             pyglet.text.Label('[Space]: Randomly mutate the terrain', x=10, y=30),
@@ -26,6 +36,7 @@ class Window(pyglet.window.Window):
 
     def reset_camera(self):
         self.camera.position = self.width // 2, self.height // 2
+        self.camera.zoom = 1
 
     def on_draw(self):
         self.clear()

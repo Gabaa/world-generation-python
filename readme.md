@@ -15,4 +15,6 @@ This is merely meant to be an inspiration for parts of a fictional map, not a dr
   - [X] Find a way to tell that strategy that window was resized (without window having to know the strategy)
 - [X] Add an exponential version of NSplits
 - [X] Helpful labels for non-me users
-- [ ] Mouse drag to move the terrain around
+- [X] Mouse drag to move the terrain around
+- [X] Mouse scroll to zoom in and out
+- [X] Add a window icon
